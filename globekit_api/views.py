@@ -75,7 +75,9 @@ class EventList(APIView):
         serializer = EventCreateSerializer(data=new_event)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            new_events = Event.objects.all()
+            rserializer = EventReadSerializer(new_events, many=True)
+            return Response(rserializer.data)
         else:
             return Response(serializer.errors)
 
