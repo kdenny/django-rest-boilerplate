@@ -19,7 +19,12 @@
                 <button class="btn btn-primary" v-on:click="loadGlobe">Show Globe</button>
             </div>
             <div class="col-9" v-if="showGlobe">
-                <div class="globe-container">Globe goes here</div>
+                <div class="globekit-canvas-container">
+                    <canvas id="globekit-canvas" width="1024" height="1024"></canvas>
+                </div>
+                <div id="globe-key">
+                    <ul id="globe-key-list"></ul>
+                </div>
                 <button class="btn btn-primary" v-on:click="showForm">Show Form</button>
             </div>
         </div>
@@ -30,8 +35,8 @@
 <script>
   import EntryForm from './EntryForm.vue'
   import EventList from './EventList.vue'
-  //import {GlobeData} from '../assets/js/GlobeData.js'
-  //import {Site} from '../assets/js/Site.js'
+  import {GlobeData} from '../globekit/GlobeData.js'
+  import {Site} from '../globekit/Site.js'
 
   export default {
     name: 'Home',
@@ -44,23 +49,21 @@
         b: 'Welcome to Your Vue.js App',
         events: null,
         publishers: [],
-        showGlobe: false
+        showGlobe: false,
+        urls: {
+          events: 'http://globekit-cms.appspot.com/globekit_data/',
+          publishers: 'http://globekit-cms.appspot.com/publishers/'
+        }
       }
     },
     mounted: function() {
-      var me = this
-      let events_url = 'http://globekit-cms.appspot.com/globekit_data/'
-//      let events_url = 'http://127.0.0.1:8000/globekit_data/'
-      this.$http.get(events_url).then(response => {
+      this.$http.get(this.urls.events).then(response => {
         let data = response.body
-        console.log(data)
-        me.events = data.events
+        this.events = data.events
       })
-      let publisher_url = 'http://globekit-cms.appspot.com/publishers/'
-      this.$http.get(publisher_url).then(response => {
+      this.$http.get(this.urls.publishers).then(response => {
         let data = response.body
-        console.log(data)
-        me.publishers = data
+        this.publishers = data
       })
     },
     methods: {
@@ -72,7 +75,7 @@
       },
       loadGlobe () {
         this.showGlobe = true
-
+        // Add additional globe loading steps here
       }
     }
   }
@@ -83,7 +86,7 @@
         margin-top: 30px;
         display: inline-block;
     }
-    .globe-container {
+    .globekit-canvas-container {
         display: inline-block;
         width: 100%;
         height: 1100px;
