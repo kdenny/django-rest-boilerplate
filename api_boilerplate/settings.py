@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'publisher_admin',
-    'globekit_api'
+    'globekit_api',
+    'webpack_loader'
 ]
 
 MIDDLEWARE = [
@@ -159,8 +160,21 @@ USE_TZ = True
 # [START staticurl]
 # Fill in your cloud bucket and switch which one of the following 2 lines
 # is commented to serve static content from GCS
-# STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
-STATIC_URL = 'https://storage.googleapis.com/globekit-cms/static/'
+# STATIC_URL = 'https://storage.googleapis.com/globekit-cms/static/'
 # [END staticurl]
 
+STATIC_URL = '/static/'
+
 STATIC_ROOT = 'static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'assets'),
+)
+
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
