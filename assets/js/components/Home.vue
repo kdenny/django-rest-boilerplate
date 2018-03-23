@@ -35,8 +35,6 @@
 <script>
   import EntryForm from './EntryForm.vue'
   import EventList from './EventList.vue'
-  import {GlobeData} from '../globekit/GlobeData.js'
-  import {Site} from '../globekit/Site.js'
 
   export default {
     name: 'Home',
