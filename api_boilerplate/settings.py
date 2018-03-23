@@ -25,7 +25,7 @@ SECRET_KEY = 't9)on5xd!=($)e9&=c+y7k6+9ee0b*6y(-m=baue%+65c$62_b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'api'
+    'publisher_admin',
+    'globekit_api'
 ]
 
 MIDDLEWARE = [
@@ -77,12 +78,35 @@ WSGI_APPLICATION = 'api_boilerplate.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+CORS_ORIGIN_ALLOW_ALL = True
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # If you are using Cloud SQL for MySQL rather than PostgreSQL, set
+        # 'ENGINE': 'django.db.backends.mysql' instead of the following.
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'globekit_db',
+        'USER': 'kdenny',
+        'PASSWORD': 'password',
+        # For MySQL, set 'PORT': '3306' instead of the following. Any Cloud
+        # SQL Proxy instances running locally must also be set to tcp:3306.
+        'PORT': '3306',
     }
 }
+
+DATABASES['default']['HOST'] = '/cloudsql/globekit-cms:us-east1:globekit-cms'
+if os.getenv('GAE_INSTANCE'):
+    pass
+else:
+    DATABASES['default']['HOST'] = '127.0.0.1'
+# [END dbconfig]
 
 
 # Password validation
@@ -132,4 +156,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
+# [START staticurl]
+# Fill in your cloud bucket and switch which one of the following 2 lines
+# is commented to serve static content from GCS
+# STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
+STATIC_URL = 'https://storage.googleapis.com/globekit-cms/static/'
+# [END staticurl]
+
+STATIC_ROOT = 'static/'
